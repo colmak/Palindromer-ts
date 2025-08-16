@@ -1,27 +1,35 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Palindromer, SearchOptions, PalindromeResult } from '@/lib/palindromer';
-import { loadDictionary } from '@/lib/utils';
-import PalindromeInput from '@/components/PalindromeInput';
-import PalindromeResults from '@/components/PalindromeResults';
-import Settings from '@/components/Settings';
+import { useState, useEffect } from "react";
+import {
+  Palindromer,
+  SearchOptions,
+  PalindromeResult,
+} from "@/lib/palindromer";
+import { loadDictionary } from "@/lib/utils";
+import PalindromeInput from "@/components/PalindromeInput";
+import PalindromeResults from "@/components/PalindromeResults";
+import Settings from "@/components/Settings";
 
 export default function Home() {
   const [palindromer, setPalindromer] = useState<Palindromer | null>(null);
-  const [input, setInput] = useState('WAS|SAW');
+  const [input, setInput] = useState("WAS|SAW");
   const [results, setResults] = useState<PalindromeResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDictionaryLoading, setIsDictionaryLoading] = useState(true);
   const [dictionaryError, setDictionaryError] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [dictionaryStats, setDictionaryStats] = useState({ wordCount: 0, avgLength: 0, maxLength: 0 });
-  
+  const [dictionaryStats, setDictionaryStats] = useState({
+    wordCount: 0,
+    avgLength: 0,
+    maxLength: 0,
+  });
+
   const [options, setOptions] = useState<SearchOptions>({
-    algorithm: 'brute-force',
+    algorithm: "brute-force",
     maxDepth: 3,
     maxResults: 100,
-    reverse: false
+    reverse: false,
   });
 
   // Initialize palindromer and load dictionary
@@ -35,11 +43,18 @@ export default function Home() {
         setDictionaryStats(palindromerInstance.getDictionaryStats());
         setDictionaryError(null);
       } catch (error) {
-        console.error('Failed to initialize palindromer:', error);
-        setDictionaryError('Failed to load dictionary. Using fallback words.');
+        console.error("Failed to initialize palindromer:", error);
+        setDictionaryError("Failed to load dictionary. Using fallback words.");
         // Still create palindromer with fallback dictionary
         const palindromerInstance = new Palindromer();
-        palindromerInstance.loadDictionary(['A', 'AM', 'WAS', 'SAW', 'NO', 'ON']);
+        palindromerInstance.loadDictionary([
+          "A",
+          "AM",
+          "WAS",
+          "SAW",
+          "NO",
+          "ON",
+        ]);
         setPalindromer(palindromerInstance);
         setDictionaryStats(palindromerInstance.getDictionaryStats());
       } finally {
@@ -52,13 +67,13 @@ export default function Home() {
 
   const handleGenerate = async () => {
     if (!palindromer) return;
-    
+
     setIsLoading(true);
     try {
       const generatedResults = palindromer.generatePalindromes(input, options);
       setResults(generatedResults);
     } catch (error) {
-      console.error('Error generating palindromes:', error);
+      console.error("Error generating palindromes:", error);
       setResults([]);
     } finally {
       setIsLoading(false);
@@ -67,16 +82,16 @@ export default function Home() {
 
   const generateInitialPairs = () => {
     if (!palindromer) return;
-    
+
     const pairs = palindromer.generateInitialPairs();
     const pairResults: PalindromeResult[] = pairs.map((pair: string) => {
-      const [left, right] = pair.split('|');
+      const [left, right] = pair.split("|");
       return {
         palindrome: pair,
         leftPart: left,
         rightPart: right,
         isComplete: true,
-        depth: 0
+        depth: 0,
       };
     });
     setResults(pairResults);
@@ -101,14 +116,18 @@ export default function Home() {
           <div className="flex justify-between items-center py-6">
             <div>
               <h1 className="text-3xl font-bold text-zinc-100">Palindromer</h1>
-              <p className="text-zinc-400 mt-1">Generate palindromes using advanced algorithms</p>
+              <p className="text-zinc-400 mt-1">
+                Generate palindromes
+              </p>
             </div>
             <div className="text-right">
               <div className="text-sm text-zinc-400">
                 Dictionary: {dictionaryStats.wordCount} words
               </div>
               {dictionaryError && (
-                <div className="text-xs text-amber-500 mt-1">{dictionaryError}</div>
+                <div className="text-xs text-amber-500 mt-1">
+                  {dictionaryError}
+                </div>
               )}
             </div>
           </div>
@@ -140,43 +159,45 @@ export default function Home() {
               onClick={() => setShowSettings(!showSettings)}
               className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300"
             >
-              {showSettings ? 'Hide' : 'Show'} Algorithm Settings
-              <svg 
-                className={`ml-1 h-4 w-4 transform transition-transform ${showSettings ? 'rotate-180' : ''}`} 
-                fill="none" 
-                stroke="currentColor" 
+              {showSettings ? "Hide" : "Show"} Algorithm Settings
+              <svg
+                className={`ml-1 h-4 w-4 transform transition-transform ${
+                  showSettings ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
           </div>
 
           {/* Settings Section */}
           {showSettings && (
-            <Settings
-              options={options}
-              onOptionsChange={setOptions}
-            />
+            <Settings options={options} onOptionsChange={setOptions} />
           )}
 
           {/* Results Section */}
-          <PalindromeResults
-            results={results}
-            isLoading={isLoading}
-          />
+          <PalindromeResults results={results} isLoading={isLoading} />
         </div>
       </main>
 
-    {/* Footer */}
-    <footer className="bg-transparent border-t border-zinc-800/80 mt-16">
+      {/* Footer */}
+      <footer className="bg-transparent border-t border-zinc-800/80 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="text-center text-zinc-500 text-sm">
+          <div className="text-center text-zinc-500 text-sm">
             <p>
               Palindromer TypeScript - Port of the original C++ implementation
             </p>
             <p className="mt-2">
-              Uses trie data structures and advanced algorithms to generate palindromes
+              Uses trie data structures and advanced algorithms to generate
+              palindromes
             </p>
           </div>
         </div>

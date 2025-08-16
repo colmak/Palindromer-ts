@@ -23,23 +23,27 @@ The Palindromer uses sophisticated algorithms to help create palindromes by expl
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18 or later)
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd palindromer-ts
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -57,17 +61,20 @@ npm run dev
 ### Example Workflow
 
 Start with a simple palindrome pair:
+
 ```
 WAS|SAW
 ```
 
 The tool might suggest extensions like:
+
 ```
 I WAS|SAW I
 A MAN WAS|SAW A MAN
 ```
 
 Continue building longer palindromes:
+
 ```
 NOTE NO|ONE TON
 NOTE NO ERASER|RES ARE ONE TON
@@ -103,12 +110,15 @@ src/
 ## Key Components
 
 ### Palindromer Class
+
 The main class that handles palindrome generation using the specified algorithm and settings.
 
 ### Trie Class
+
 Efficient data structure for storing and searching dictionary words.
 
 ### React Components
+
 - **PalindromeInput**: Input form with validation
 - **PalindromeResults**: Display generated palindromes with completion indicators
 - **Settings**: Algorithm configuration panel
@@ -116,12 +126,14 @@ Efficient data structure for storing and searching dictionary words.
 ## Algorithms Explained
 
 ### Brute-Force Search
+
 - Systematically explores all possible word combinations
 - Guarantees finding all possible palindromes
 - Best for thorough exploration
 - Slower but complete
 
 ### Monte-Carlo Search
+
 - Uses randomness to explore branches
 - Faster execution
 - Good for inspiration and quick results
