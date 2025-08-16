@@ -16,24 +16,24 @@ export default function Settings({ options, onOptionsChange }: SettingsProps) {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Algorithm Settings</h3>
+    <div className="w-full max-w-2xl mx-auto p-6 rounded-xl border border-zinc-800 bg-zinc-950 shadow-[0_0_0_1px_rgba(255,255,255,0.03)]">
+      <h3 className="text-lg font-semibold text-zinc-100 mb-4">Algorithm Settings</h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Algorithm Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Algorithm
           </label>
           <select
             value={options.algorithm}
             onChange={(e) => handleChange('algorithm', e.target.value as 'brute-force' | 'monte-carlo')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-zinc-800 bg-zinc-900/60 text-zinc-100 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-600"
           >
             <option value="brute-force">Brute Force</option>
             <option value="monte-carlo">Monte Carlo</option>
           </select>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-zinc-500">
             {options.algorithm === 'brute-force' 
               ? 'Finds all possibilities (thorough but slower)'
               : 'Random exploration (faster but may miss options)'
@@ -43,7 +43,7 @@ export default function Settings({ options, onOptionsChange }: SettingsProps) {
 
         {/* Max Depth */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Max Depth: {options.maxDepth}
           </label>
           <input
@@ -53,16 +53,16 @@ export default function Settings({ options, onOptionsChange }: SettingsProps) {
             step="1"
             value={options.maxDepth}
             onChange={(e) => handleChange('maxDepth', parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-zinc-500">
             How many word additions to explore
           </p>
         </div>
 
         {/* Max Results */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-zinc-300 mb-2">
             Max Results: {options.maxResults}
           </label>
           <input
@@ -72,9 +72,9 @@ export default function Settings({ options, onOptionsChange }: SettingsProps) {
             step="10"
             value={options.maxResults}
             onChange={(e) => handleChange('maxResults', parseInt(e.target.value))}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+            className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer"
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-zinc-500">
             Maximum number of results to display
           </p>
         </div>
@@ -86,19 +86,19 @@ export default function Settings({ options, onOptionsChange }: SettingsProps) {
               type="checkbox"
               checked={options.reverse}
               onChange={(e) => handleChange('reverse', e.target.checked)}
-              className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="rounded border-zinc-700 bg-zinc-900 text-blue-600 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-600/30"
             />
-            <span className="ml-2 text-sm font-medium text-gray-700">Reverse Mode</span>
+            <span className="ml-2 text-sm font-medium text-zinc-300">Reverse Mode</span>
           </label>
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-zinc-500">
             Build from center outward instead of outside inward
           </p>
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-        <h4 className="text-sm font-medium text-blue-900 mb-2">How it works:</h4>
-        <ul className="text-xs text-blue-800 space-y-1">
+      <div className="mt-6 p-4 bg-zinc-900/60 border border-zinc-800 rounded-lg">
+        <h4 className="text-sm font-medium text-zinc-200 mb-2">How it works:</h4>
+        <ul className="text-xs text-zinc-400 space-y-1">
           <li>• <strong>Brute Force:</strong> Systematically explores all possible word combinations</li>
           <li>• <strong>Monte Carlo:</strong> Uses randomness to explore promising paths deeply</li>
           <li>• <strong>Depth:</strong> Controls how many words can be added in sequence</li>

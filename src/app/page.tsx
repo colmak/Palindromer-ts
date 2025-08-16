@@ -84,31 +84,31 @@ export default function Home() {
 
   if (isDictionaryLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-black text-zinc-100 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dictionary...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-zinc-400">Loading dictionary...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-black text-zinc-100">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-transparent border-b border-zinc-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Palindromer</h1>
-              <p className="text-gray-600 mt-1">Generate palindromes using advanced algorithms</p>
+              <h1 className="text-3xl font-bold text-zinc-100">Palindromer</h1>
+              <p className="text-zinc-400 mt-1">Generate palindromes using advanced algorithms</p>
             </div>
             <div className="text-right">
-              <div className="text-sm text-gray-500">
+              <div className="text-sm text-zinc-400">
                 Dictionary: {dictionaryStats.wordCount} words
               </div>
               {dictionaryError && (
-                <div className="text-xs text-orange-600 mt-1">{dictionaryError}</div>
+                <div className="text-xs text-amber-500 mt-1">{dictionaryError}</div>
               )}
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function Home() {
           <div className="text-center">
             <button
               onClick={generateInitialPairs}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="inline-flex items-center px-4 py-2 rounded-md text-sm font-medium border border-zinc-700 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-600/50"
             >
               Generate Initial Palindrome Pairs
             </button>
@@ -138,7 +138,7 @@ export default function Home() {
           <div className="text-center">
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+              className="inline-flex items-center text-sm text-blue-400 hover:text-blue-300"
             >
               {showSettings ? 'Hide' : 'Show'} Algorithm Settings
               <svg 
@@ -168,10 +168,10 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t mt-16">
+    {/* Footer */}
+    <footer className="bg-transparent border-t border-zinc-800/80 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-500 text-sm">
+      <div className="text-center text-zinc-500 text-sm">
             <p>
               Palindromer TypeScript - Port of the original C++ implementation
             </p>
