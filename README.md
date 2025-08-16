@@ -1,6 +1,6 @@
 # Palindromer TypeScript
 
-A Next.js TypeScript tool for generating palindromes
+A tool for generating palindromes
 ## Features
 
 - **Algorithms**: Choose between brute-force and Monte-Carlo search methods
