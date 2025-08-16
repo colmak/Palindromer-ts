@@ -1,6 +1,6 @@
 # Palindromer TypeScript
 
-A Next.js TypeScript port of the original C++ Palindromer tool for generating palindromes
+A Next.js TypeScript tool for generating palindromes
 ## Features
 
 - **Algorithms**: Choose between brute-force and Monte-Carlo search methods
