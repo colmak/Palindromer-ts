@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Palindromer TypeScript
+
+A Next.js TypeScript port of the original C++ Palindromer tool for generating palindromes using advanced algorithms.
+
+## Features
+
+- **Advanced Algorithms**: Choose between brute-force and Monte-Carlo search methods
+- **Trie Data Structure**: Efficient dictionary lookups and word matching
+- **Interactive Web Interface**: Modern, responsive UI built with Next.js and Tailwind CSS
+- **Real-time Generation**: Generate palindromes from any starting point
+- **Customizable Settings**: Adjust algorithm parameters, search depth, and result limits
+
+## How It Works
+
+The Palindromer uses sophisticated algorithms to help create palindromes by exploring all possible continuations from any starting point:
+
+1. **Brute-Force Algorithm**: Systematically explores all possible word combinations to find complete palindromes. This method is thorough and won't miss any possibilities.
+
+2. **Monte-Carlo Algorithm**: Uses randomness to explore promising branches deeply. This is faster but may not find all possible combinations.
+
+3. **Trie Data Structure**: Efficiently stores and searches through dictionary words for fast lookups.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js (v18 or later)
+- npm or yarn
 
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd palindromer-ts
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+### Basic Usage
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Enter a palindrome starting point in the format `LEFT|RIGHT` (e.g., `WAS|SAW`)
+2. Choose your algorithm settings (optional)
+3. Click "Generate Palindromes" to see all possible extensions
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Example Workflow
 
-## Deploy on Vercel
+Start with a simple palindrome pair:
+```
+WAS|SAW
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The tool might suggest extensions like:
+```
+I WAS|SAW I
+A MAN WAS|SAW A MAN
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Continue building longer palindromes:
+```
+NOTE NO|ONE TON
+NOTE NO ERASER|RES ARE ONE TON
+```
+
+### Algorithm Settings
+
+- **Algorithm Type**: Choose between brute-force (thorough) or Monte-Carlo (fast exploration)
+- **Max Depth**: Control how many word additions to explore (1-10)
+- **Max Results**: Limit the number of results displayed (10-500)
+- **Reverse Mode**: Build from center outward instead of outside inward
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── api/
+│   │   └── dictionary/          # API endpoint for dictionary
+│   ├── page.tsx                 # Main application page
+│   └── layout.tsx              # Root layout
+├── components/
+│   ├── PalindromeInput.tsx     # Input component
+│   ├── PalindromeResults.tsx   # Results display component
+│   └── Settings.tsx            # Algorithm settings component
+├── lib/
+│   ├── palindromer.ts          # Main palindrome generation logic
+│   ├── trie.ts                 # Trie data structure implementation
+│   └── utils.ts                # Utility functions
+└── dictionary.txt              # Word dictionary
+```
+
+## Key Components
+
+### Palindromer Class
+The main class that handles palindrome generation using the specified algorithm and settings.
+
+### Trie Class
+Efficient data structure for storing and searching dictionary words.
+
+### React Components
+- **PalindromeInput**: Input form with validation
+- **PalindromeResults**: Display generated palindromes with completion indicators
+- **Settings**: Algorithm configuration panel
+
+## Algorithms Explained
+
+### Brute-Force Search
+- Systematically explores all possible word combinations
+- Guarantees finding all possible palindromes
+- Best for thorough exploration
+- Slower but complete
+
+### Monte-Carlo Search
+- Uses randomness to explore branches
+- Faster execution
+- Good for inspiration and quick results
+- May miss some possibilities
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is based on the original C++ Palindromer implementation and is provided as-is for educational and personal use.
+
+## Acknowledgments
+
+- Original C++ implementation and algorithm design
+- Next.js and React communities
+- Tailwind CSS for styling
+- TypeScript for type safety

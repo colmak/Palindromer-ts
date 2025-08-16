@@ -1,102 +1,185 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Palindromer, SearchOptions, PalindromeResult } from '@/lib/palindromer';
+import { loadDictionary } from '@/lib/utils';
+import PalindromeInput from '@/components/PalindromeInput';
+import PalindromeResults from '@/components/PalindromeResults';
+import Settings from '@/components/Settings';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [palindromer, setPalindromer] = useState<Palindromer | null>(null);
+  const [input, setInput] = useState('WAS|SAW');
+  const [results, setResults] = useState<PalindromeResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDictionaryLoading, setIsDictionaryLoading] = useState(true);
+  const [dictionaryError, setDictionaryError] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [dictionaryStats, setDictionaryStats] = useState({ wordCount: 0, avgLength: 0, maxLength: 0 });
+  
+  const [options, setOptions] = useState<SearchOptions>({
+    algorithm: 'brute-force',
+    maxDepth: 3,
+    maxResults: 100,
+    reverse: false
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  // Initialize palindromer and load dictionary
+  useEffect(() => {
+    const initializePalindromer = async () => {
+      try {
+        const palindromerInstance = new Palindromer();
+        const dictionary = await loadDictionary();
+        palindromerInstance.loadDictionary(dictionary);
+        setPalindromer(palindromerInstance);
+        setDictionaryStats(palindromerInstance.getDictionaryStats());
+        setDictionaryError(null);
+      } catch (error) {
+        console.error('Failed to initialize palindromer:', error);
+        setDictionaryError('Failed to load dictionary. Using fallback words.');
+        // Still create palindromer with fallback dictionary
+        const palindromerInstance = new Palindromer();
+        palindromerInstance.loadDictionary(['A', 'AM', 'WAS', 'SAW', 'NO', 'ON']);
+        setPalindromer(palindromerInstance);
+        setDictionaryStats(palindromerInstance.getDictionaryStats());
+      } finally {
+        setIsDictionaryLoading(false);
+      }
+    };
+
+    initializePalindromer();
+  }, []);
+
+  const handleGenerate = async () => {
+    if (!palindromer) return;
+    
+    setIsLoading(true);
+    try {
+      const generatedResults = palindromer.generatePalindromes(input, options);
+      setResults(generatedResults);
+    } catch (error) {
+      console.error('Error generating palindromes:', error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const generateInitialPairs = () => {
+    if (!palindromer) return;
+    
+    const pairs = palindromer.generateInitialPairs();
+    const pairResults: PalindromeResult[] = pairs.map((pair: string) => {
+      const [left, right] = pair.split('|');
+      return {
+        palindrome: pair,
+        leftPart: left,
+        rightPart: right,
+        isComplete: true,
+        depth: 0
+      };
+    });
+    setResults(pairResults);
+  };
+
+  if (isDictionaryLoading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dictionary...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Palindromer</h1>
+              <p className="text-gray-600 mt-1">Generate palindromes using advanced algorithms</p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-500">
+                Dictionary: {dictionaryStats.wordCount} words
+              </div>
+              {dictionaryError && (
+                <div className="text-xs text-orange-600 mt-1">{dictionaryError}</div>
+              )}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="space-y-8">
+          {/* Input Section */}
+          <PalindromeInput
+            onInputChange={setInput}
+            onGenerate={handleGenerate}
+            isGenerating={isLoading}
+          />
+
+          {/* Quick Start Section */}
+          <div className="text-center">
+            <button
+              onClick={generateInitialPairs}
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              Generate Initial Palindrome Pairs
+            </button>
+          </div>
+
+          {/* Settings Toggle */}
+          <div className="text-center">
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-800"
+            >
+              {showSettings ? 'Hide' : 'Show'} Algorithm Settings
+              <svg 
+                className={`ml-1 h-4 w-4 transform transition-transform ${showSettings ? 'rotate-180' : ''}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Settings Section */}
+          {showSettings && (
+            <Settings
+              options={options}
+              onOptionsChange={setOptions}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          )}
+
+          {/* Results Section */}
+          <PalindromeResults
+            results={results}
+            isLoading={isLoading}
+          />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+
+      {/* Footer */}
+      <footer className="bg-white border-t mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center text-gray-500 text-sm">
+            <p>
+              Palindromer TypeScript - Port of the original C++ implementation
+            </p>
+            <p className="mt-2">
+              Uses trie data structures and advanced algorithms to generate palindromes
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
